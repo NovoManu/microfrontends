@@ -7,6 +7,9 @@ npm start
 ```
 
 Routes:
-
+```
 / - microfrontend 1
+
 /micro2 - microfrontend 2
+```
+
