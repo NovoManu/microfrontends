@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "app": "node server.js",
+    "micro1": "node microfrontend1/server.js",
+    "micro2": "node microfrontend2/server.js",
+    "start": "concurrently \"npm run app\" \"npm run micro1\" \"npm run micro2\""
   },
   "author": "Manu Ustenko",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^8.2.2",
     "express": "^4.19.2"
   }
 }

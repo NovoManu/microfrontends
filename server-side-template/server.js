@@ -1,21 +1,31 @@
 const express = require('express');
 const app = express();
 
-// Define routes for different microfrontends
-app.get('/microfrontend1', (req, res) => {
-  // Fetch data or render content specific to microfrontend 1
-  const content = "<h1>Microfrontend 1</h1><p>This is the content for microfrontend 1.</p>";
-  res.send(content);
-});
+const getMicrofrontendOneContent = async () => {
+  return await fetch('http://localhost:3001').then((content) => {
+    return content.text()
+  }).then((html) => {
+    return html
+  })
+}
 
-app.get('/microfrontend2', (req, res) => {
-  // Fetch data or render content specific to microfrontend 2
-  const content = "<h1>Microfrontend 2</h1><p>This is the content for microfrontend 2.</p>";
-  res.send(content);
-});
+const getMicrofrontendTwoContent = async () => {
+  return await fetch('http://localhost:3002').then((content) => {
+    return content.text()
+  }).then((html) => {
+    return html
+  })
+}
 
 // Define main route to render the container application
-app.get('/', (req, res) => {
+app.get('*', async (req, res) => {
+  const pages = {
+    '/micro2': getMicrofrontendTwoContent,
+    'default': getMicrofrontendOneContent
+  }
+  const page = pages[req.path] || pages.default
+  const pageContent=  await page()
+
   // Render the main template and include placeholders for microfrontends
   const mainContent = `
     <html>
@@ -23,9 +33,7 @@ app.get('/', (req, res) => {
         <title>Container Application</title>
       </head>
       <body>
-        <div id="microfrontend1"></div>
-        <div id="microfrontend2"></div>
-        <!-- Additional microfrontend placeholders can be added here -->
+        <div id="page-content">${pageContent}</div>
       </body>
     </html>
   `;
